@@ -7,6 +7,7 @@ services:
         container_name: app-estacionamento
         volumes:
             - ./:/var/www/html
+            #- ./.docker/php/xdebug.ini:/usr/local/etc/php/conf.d/local.ini
         ports:
             - "9000:9000"
         depends_on:
@@ -17,6 +18,7 @@ services:
         image: nginx:latest
         ports:
             - "80:80"
+            - "443:443"
         volumes:
             - ./:/var/www/html
             - .docker/nginx/:/etc/nginx/conf.d
@@ -26,8 +28,12 @@ services:
         command: --innodb-use-native-aio=0
         container_name: db-estacionamento
         restart: always
+        volumes:
+            - ./.docker/mysql/:/var/lib/mysql
         tty: true
+        ports:
+            - "3306:3306"
         environment:
             - MYSQL_DATABASE=php
-            - MYSQL_ROOT_PASSWORD=1234
             - MYSQL_USER=leandro
+            - MYSQL_PASSWORD=1234
